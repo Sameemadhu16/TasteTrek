@@ -1,10 +1,10 @@
-package com.tastetrek;
+package com.zosh;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApplicationTests {
+class OnlineFoodOrderingApplicationTests {
 
 	@Test
 	void contextLoads() {

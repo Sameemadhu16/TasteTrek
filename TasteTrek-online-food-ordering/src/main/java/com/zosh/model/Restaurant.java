@@ -1,34 +1,23 @@
-package com.model;
+package com.zosh.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 @Data
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Restaurant {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     @OneToOne
     private User owner;
@@ -36,18 +25,17 @@ public class Restaurant {
     private String name;
 
     private String description;
-
     private String cuisineType;
 
     @OneToOne
     private Address address;
 
     @Embedded
-    private ContactInformation contactInformation;
+    private ContactInformation contactinformation;
 
     private String openingHours;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
     @ElementCollection
@@ -59,6 +47,6 @@ public class Restaurant {
     private boolean open;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval= true)
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
     private List<Food> foods = new ArrayList<>();
 }
