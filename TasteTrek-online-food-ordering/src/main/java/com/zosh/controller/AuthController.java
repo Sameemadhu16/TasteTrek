@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,7 @@ import com.zosh.model.Cart;
 import com.zosh.model.User;
 import com.zosh.repository.CartRepository;
 import com.zosh.repository.UserRepository;
+import com.zosh.request.LoginRequest;
 import com.zosh.response.AuthResponse;
 import com.zosh.service.CustomUserDetailsService;
 
@@ -72,5 +75,27 @@ public class AuthController {
         return new ResponseEntity<>(authResponse,HttpStatus.CREATED) ;
     }
 
-    
+    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest req){
+
+        String username = req.getEmail();
+        String password = req.getPassword();
+
+        Authentication authentication = authenticate(username,password);
+        
+                return null;
+            }
+        
+            private Authentication authenticate(String username, String password) {
+
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                
+                if(userDetails == null){
+                    throw new BadCredentialsException("Invalid username");
+                }
+                if(!passwordEncoder.matches(password, userDetails.getPassword())){
+                    throw new BadCredentialsException("Invalid Password");
+                }
+
+                return new UsernamePasswordAuthenticationToken(userDetails, null,userDetails.getAuthorities());
+            }
 }
