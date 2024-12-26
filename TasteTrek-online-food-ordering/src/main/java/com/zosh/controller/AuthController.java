@@ -1,7 +1,10 @@
 package com.zosh.controller;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zosh.config.JwtProvider;
 import com.zosh.model.Cart;
+import com.zosh.model.USER_ROLE;
 import com.zosh.model.User;
 import com.zosh.repository.CartRepository;
 import com.zosh.repository.UserRepository;
@@ -75,6 +79,7 @@ public class AuthController {
         return new ResponseEntity<>(authResponse,HttpStatus.CREATED) ;
     }
 
+    @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest req){
 
         String username = req.getEmail();
@@ -82,8 +87,19 @@ public class AuthController {
 
         Authentication authentication = authenticate(username,password);
         
-                return null;
-            }
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        String role = authorities.isEmpty()?null: authorities.iterator().next().getAuthority();
+
+        String jwt = jwtProvider.generateToken((authentication));
+
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setJwt(jwt);
+        authResponse.setMessage("Register success");
+        authResponse.setRole(USER_ROLE.valueOf(role));
+
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+        
+    }
         
             private Authentication authenticate(String username, String password) {
 
