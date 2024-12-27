@@ -79,7 +79,7 @@ public class RestaurantServiceImp implements RestaurantService{
 
     @Override
     public List<Restaurant> getAllRestaurants() {
-        return null;
+        return restaurantRepository.findAll();
     }
 
     @Override
