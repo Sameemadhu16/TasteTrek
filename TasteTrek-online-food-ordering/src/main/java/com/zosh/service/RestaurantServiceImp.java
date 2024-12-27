@@ -48,7 +48,24 @@ public class RestaurantServiceImp implements RestaurantService{
 
     @Override
     public Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequest updatedRestaurant) throws Exception {
-        return null;
+
+        Restaurant restaurant = findRestaurantById(restaurantId);
+
+        if(restaurant.getCuisineType()!=null){
+            restaurant.setCuisineType(updatedRestaurant.getCuisineType());
+        }
+
+        if(restaurant.getDescription() != null){
+            restaurant.setDescription(updatedRestaurant.getDescription());
+        }
+
+        if(restaurant.getName() != null){
+            restaurant.setName(updatedRestaurant.getName());
+        }
+
+        //add the other fields if you need
+
+        return restaurantRepository.save(restaurant);
     }
 
     @Override
