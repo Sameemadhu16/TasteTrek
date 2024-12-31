@@ -3,7 +3,9 @@ package com.zosh.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,21 @@ public class AdminRestaurantController {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.createRestaurant(req, user);
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
-
     }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Restaurant> updateRestaurant(
+
+            @RequestBody CreateRestaurantRequest req,
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long id
+            ) throws Exception {
+
+        User user = userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.createRestaurant(req, user);
+        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+    }
+
+    
 }
