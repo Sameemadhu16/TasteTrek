@@ -3,6 +3,7 @@ package com.zosh.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zosh.model.Restaurant;
 import com.zosh.model.User;
 import com.zosh.request.CreateRestaurantRequest;
+import com.zosh.response.MessageResponse;
 import com.zosh.service.RestaurantService;
 import com.zosh.service.UserService;
 
@@ -50,8 +52,22 @@ public class AdminRestaurantController {
             ) throws Exception {
 
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.createRestaurant(req, user);
+        Restaurant restaurant = restaurantService.updateRestaurant(id, req);
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MessageResponse> deleteRestaurant(
+
+            @RequestBody CreateRestaurantRequest req,
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long id) throws Exception {
+
+        User user = userService.findUserByJwtToken(jwt);
+        restaurantService.deleteRestaurant(id);
+        MessageResponse res = new MessageResponse();
+        res.setMessage("restaurant deleted successfully");
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     
