@@ -1,7 +1,9 @@
 package com.zosh.service;
 
+import java.nio.file.OpenOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.zosh.model.Restaurant;
 import com.zosh.model.User;
 import com.zosh.repository.AddressRepository;
 import com.zosh.repository.RestaurantRepository;
+import com.zosh.repository.UserRepository;
 import com.zosh.request.CreateRestaurantRequest;
 
 @Service
@@ -24,7 +27,7 @@ public class RestaurantServiceImp implements RestaurantService{
     private AddressRepository addressRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public Restaurant createRestaurant(CreateRestaurantRequest req, User user) {
@@ -83,23 +86,48 @@ public class RestaurantServiceImp implements RestaurantService{
     }
 
     @Override
-    public List<Restaurant> searchRestaurants() {
-        return null;
+    public List<Restaurant> searchRestaurants(String keyword) {
+        return restaurantRepository.findBySearchQuery(keyword);
     }
 
     @Override
     public Restaurant findRestaurantById(Long id) throws Exception {
-        return null;
+        Optional<Restaurant> opt = restaurantRepository.findById(id);
+
+        if(opt.isEmpty()){
+            throw new Exception("restaurant not found with id" + id);
+        }
+        return opt.get();
     }
 
     @Override
     public Restaurant getRestaurantByUserId(Long userId) throws Exception {
-        return null;
+
+        Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
+        if(restaurant == null){
+            throw new Exception("restaurant not found with owner id" + userId);
+
+        }
+
+        return restaurant;
     }
 
     @Override
     public RestaurantDto addToFavorites(Long restaurantId, User user) throws Exception {
-        return null;
+
+        Restaurant restaurant = findRestaurantById(restaurantId);
+        RestaurantDto dto = new RestaurantDto();
+        dto.setImages(restaurant.getImages());
+        dto.setTitle(restaurant.getName());
+        dto.setId(restaurantId);
+
+        if(user.getFavourites().contains(dto)){
+            user.getFavourites().remove(dto);
+        }
+        else user.getFavourites().add(dto);
+
+        userRepository.save(user);
+        return dto;
     }
 
     @Override
