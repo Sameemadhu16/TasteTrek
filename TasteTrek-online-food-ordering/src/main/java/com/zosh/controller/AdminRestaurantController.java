@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -70,7 +71,20 @@ public class AdminRestaurantController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/status")
+    @PutMapping("/user")
+    public ResponseEntity<Restaurant> findRestaurantById(
+
+            @RequestBody CreateRestaurantRequest req,
+            @RequestHeader("Authorization") String jwt
+            ) throws Exception {
+
+        User user = userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/status")
     public ResponseEntity<Restaurant> updateRestaurantStatus(
 
             @RequestBody CreateRestaurantRequest req,
@@ -79,7 +93,7 @@ public class AdminRestaurantController {
 
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.updateRestaurantStatus(id);
-        
+
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 }
