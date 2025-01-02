@@ -8,12 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zosh.dto.RestaurantDto;
 import com.zosh.model.Restaurant;
 import com.zosh.model.User;
 import com.zosh.request.CreateRestaurantRequest;
@@ -39,7 +41,7 @@ public class RestaurantController {
         
         User user = userService.findUserByJwtToken(jwt);
         List<Restaurant> restaurant = restaurantService.searchRestaurants(keyword);
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
     @GetMapping()
@@ -49,7 +51,7 @@ public class RestaurantController {
 
         User user = userService.findUserByJwtToken(jwt);
         List<Restaurant> restaurant = restaurantService.getAllRestaurants();
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -60,7 +62,18 @@ public class RestaurantController {
 
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.findRestaurantById(id);
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/add-favorites")
+    public ResponseEntity<RestaurantDto> addToFavorites(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long id) throws Exception {
+
+        User user = userService.findUserByJwtToken(jwt);
+        // Restaurant restaurant = restaurantService.findRestaurantById(id);
+        RestaurantDto restaurant = restaurantService.addToFavorites(id, user);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
 
