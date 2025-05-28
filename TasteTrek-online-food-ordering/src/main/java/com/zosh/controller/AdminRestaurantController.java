@@ -21,7 +21,7 @@ import com.zosh.service.RestaurantService;
 import com.zosh.service.UserService;
 
 @RestController
-@RequestMapping("/api/admin/restaurant")
+@RequestMapping("/api/admin/restaurants")
 public class AdminRestaurantController {
 
     @Autowired
@@ -59,8 +59,6 @@ public class AdminRestaurantController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponse> deleteRestaurant(
-
-            @RequestBody CreateRestaurantRequest req,
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id) throws Exception {
 
@@ -71,23 +69,20 @@ public class AdminRestaurantController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PutMapping("/user")
+    @GetMapping("/user")
     public ResponseEntity<Restaurant> findRestaurantById(
 
-            @RequestBody CreateRestaurantRequest req,
             @RequestHeader("Authorization") String jwt
             ) throws Exception {
 
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
-        
+
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/status")
+    @PutMapping("/{id}/status")
     public ResponseEntity<Restaurant> updateRestaurantStatus(
-
-            @RequestBody CreateRestaurantRequest req,
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id) throws Exception {
 

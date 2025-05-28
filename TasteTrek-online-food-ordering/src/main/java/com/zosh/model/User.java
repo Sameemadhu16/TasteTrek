@@ -30,6 +30,10 @@ public class User {
 
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
 
+    public Long getId() {
+        return id;
+    }
+
 
 
     @JsonIgnore
