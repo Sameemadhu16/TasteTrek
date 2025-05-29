@@ -6,15 +6,19 @@ import com.zosh.dto.RestaurantDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+// @AllArgsConstructor
+// @NoArgsConstructor
+@Getter
+@Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,7 +38,37 @@ public class User {
         return id;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
+    public String getFullname() {
+        return fullname;
+    }
+
+    public USER_ROLE getRole() {
+        return role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public void setRole(USER_ROLE role) {
+        this.role = role;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "customer")
@@ -42,6 +76,10 @@ public class User {
 
     @ElementCollection
     private List<RestaurantDto> favourites = new ArrayList();
+
+    public List<RestaurantDto> getFavourites() {
+        return favourites;
+    }
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();

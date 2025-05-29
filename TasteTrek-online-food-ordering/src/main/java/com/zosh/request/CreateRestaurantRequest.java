@@ -19,5 +19,32 @@ public class CreateRestaurantRequest {
     private String openingHours;
     private List<String> images;
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public ContactInformation getContactInformation() {
+        return contactInformation;
+    }
+
+    public String getCuisineType() {
+        return cuisineType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getOpeningHours() {
+        return openingHours;
+    }
 
 }
